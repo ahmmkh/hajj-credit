@@ -121,7 +121,7 @@ def recieve(request):
         sent_to = request.POST.get('user', '')
         msg = "code to confirm payment with amount "+amount+ " pin is  " + str(pin)
         message = client.messages.create(
-            to="+201550328883",
+            to="+201118208540",
             from_="+17175469588",
             body=msg)
         s_to = Member.objects.get(first_name=sent_to)
