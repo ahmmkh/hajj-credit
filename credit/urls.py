@@ -21,6 +21,9 @@ urlpatterns = [
     url(r'^login/$', views.logIn,name='login'),
     url(r'^signup/$', views.signUp,name='signup'),
     url(r'^form/$', views.form,name='form'),
+    url(r'^send/$', views.send,name='send'),
+    url(r'^(?:verf-(?P<trans_id>\d+)/)?$', views.verf,name = 'verf'),
+    
 
 
 
