@@ -14,9 +14,24 @@ from .models import *
 
 
 def index(request):
-    return render(request, "index.html")
+    logged_in = checkAuth(request)
+    return render(request, "index.html",context={'log':logged_in})
+
+def dashboard(request):
+    logged_in = checkAuth(request)
+    if logged_in == False:
+        redirect('credit:logIn')
+    else:
+        m = Member.objects.get(pk=logged_in)
+        return render(request,'dashboard.html',context={'member':m})
 
 
+def checkAuth(request):
+    try:
+        m = request.session['member_id']
+    except:
+        return 0
+    return m
 def logIn(request):
     name = request.POST['username'].split(" ")[0]
     pwd = request.POST['password']
@@ -68,20 +83,7 @@ def signUp(request):
     else:
         mem = Member.objects.create(
             first_name=fname, last_name=lname, email=mail, pwd=password, logged_in=True)
-        from twilio.rest import Client
-        # Your Account SID from twilio.com/console
-        account_sid = "AC0ecf8751edaaa7efa663b8ee5adfb9ce"
-        # Your Auth Token from twilio.com/console
-        auth_token = "3195155aea2c94c1130a9b1dbe9147ef"
 
-        client = Client(account_sid, auth_token)
-        import random
-        pin = random.randint(999, 9999)
-        msg = "welcome "+fname+"  "+lname+" your secret pin is  " + str(pin)
-        message = client.messages.create(
-            to="+201550328883",
-            from_="+17175469588",
-            body=msg)
         return HttpResponseRedirect(reverse('credit:index'))
 
     return HttpResponse("signup")
@@ -105,8 +107,23 @@ def recieve(request):
     if request.method == 'POST':
         import random
         pin = random.randint(999, 9999)
+        from twilio.rest import Client
+        # Your Account SID from twilio.com/console
+        account_sid = "AC0ecf8751edaaa7efa663b8ee5adfb9ce"
+        # Your Auth Token from twilio.com/console
+        auth_token = "3195155aea2c94c1130a9b1dbe9147ef"
+
+        client = Client(account_sid, auth_token)
+        import random
+        pin = random.randint(999, 9999)
+  
         amount = request.POST.get('amount', '')
         sent_to = request.POST.get('user', '')
+        msg = "code to confirm payment with amount "+amount+ " pin is  " + str(pin)
+        message = client.messages.create(
+            to="+201550328883",
+            from_="+17175469588",
+            body=msg)
         s_to = Member.objects.get(first_name=sent_to)
         trans = transaction.objects.create(amount=int(amount), token=pin, status=0, done=0,
                                            t_type=1, user_one=Member.objects.get(pk=request.session['member_id']), user_two=s_to)

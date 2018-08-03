@@ -19,10 +19,13 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index,name='index'),
     url(r'^login/$', views.logIn,name='login'),
+    url(r'^logout/$', views.logOut,name='logout'),
     url(r'^signup/$', views.signUp,name='signup'),
     url(r'^form/$', views.form,name='form'),
     url(r'^send/$', views.send,name='send'),
+    url(r'^recieve/$', views.recieve,name='recieve'),
     url(r'^(?:verf-(?P<trans_id>\d+)/)?$', views.verf,name = 'verf'),
+    url(r'^dashboard/$', views.dashboard,name='dashboard'),
     
 
 

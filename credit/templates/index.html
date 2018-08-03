@@ -43,7 +43,17 @@
 
 <div id="unitlessValue">
 
-    <a href="{% url 'credit:form'%}"><button class="button button2 el">Start</button></a>
+{% if not log %}
+<a href="{% url 'credit:form'%}"><button class="button button2 el">login</button></a>
+
+{% else %}
+
+<a href="{% url 'credit:logout'%}"><button class="button button2 el">logOut</button></a>
+<a href="{% url 'credit:dashboard'%}"><button class="button button2 el">dashboard</button></a>
+
+
+{% endif %}
+  
 
 </div>
   <script src="{% static "js/4032af61ca0478304ab7b31b7.js" %}"></script>
